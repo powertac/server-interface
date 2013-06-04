@@ -35,11 +35,19 @@ public interface CapacityControl {
                                  double payment);
 
   /**
-   * Gathers up power usage data for the current timeslot that could be
+   * Gathers up curtailable power usage data and other available
+   * up-regulation capacity for the current timeslot that could be
    * subject to a BalancingOrder. Return value is in kwh. 
    */
-  public double getCurtailableUsage (BalancingOrder order);
-  
+  public double getMaxUpRegulation (BalancingOrder order);
+
+  /**
+   * Gathers up curtailable power production data and other available
+   * down-regulation capacity for the current timeslot that could be
+   * subject to a BalancingOrder. Return value is in kwh.
+   */
+  public double getMaxDownRegulation (BalancingOrder order);
+
   // ------------------- TariffMarket API -----------------
   /**
    * Posts an EconomicControlEvent on the correct TariffSubscription instances.

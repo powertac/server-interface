@@ -249,7 +249,7 @@ public class TariffSubscription
    */
   public void usePower (double kwh)
   {
-    // do curtailment first
+    // do economic curtailment first
     double actualKwh = kwh - getCurtailedKwh(kwh, totalUsage);
     log.info("usePower " + kwh + ", actual " + actualKwh + 
              ", customer=" + customer.getName());
