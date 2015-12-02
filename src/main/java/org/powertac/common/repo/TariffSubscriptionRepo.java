@@ -20,12 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-//import org.apache.log4j.Logger;
 import org.powertac.common.CustomerInfo;
 import org.powertac.common.Tariff;
 import org.powertac.common.TariffSubscription;
-import org.powertac.common.interfaces.TariffMarket;
 import org.powertac.util.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,8 +36,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TariffSubscriptionRepo implements DomainRepo
 {
-  //static private Logger log = Logger.getLogger(TariffSubscriptionRepo.class.getName());
-
+  
   private HashMap<Tariff, List<TariffSubscription>> tariffMap;
   private HashMap<CustomerInfo, List<TariffSubscription>> customerMap;
   
