@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powertac.common.Competition;
 import org.powertac.common.CustomerInfo;
 import org.powertac.common.CustomerInfo.CustomerClass;
@@ -34,6 +35,13 @@ import org.powertac.common.WeatherReport;
 import org.powertac.common.XMLMessageConverter;
 import org.powertac.common.msg.CustomerBootstrapData;
 import org.powertac.common.msg.MarketBootstrapData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.thoughtworks.xstream.XStream;
@@ -42,13 +50,22 @@ import com.thoughtworks.xstream.XStream;
  * @author John Collins
  *
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:repo-config.xml"})
+@DirtiesContext
+@TestExecutionListeners(listeners = {
+  DependencyInjectionTestExecutionListener.class,
+  DirtiesContextTestExecutionListener.class
+})
 public class BootstrapDataRepoTest
 {
   static private Logger log =
           LogManager.getLogger(BootstrapDataRepoTest.class.getName());
 
-  BootstrapDataRepo uut;
-  XMLMessageConverter xmc;
+  @Autowired
+  private XMLMessageConverter xmc;
+
+  private BootstrapDataRepo uut;
 
   /**
    * 
@@ -57,8 +74,8 @@ public class BootstrapDataRepoTest
   public void setUp () throws Exception
   {
     uut = new BootstrapDataRepo();
-    xmc = new XMLMessageConverter();
-    xmc.afterPropertiesSet();
+    //xmc = new XMLMessageConverter();
+    //xmc.afterPropertiesSet();
     ReflectionTestUtils.setField(uut, "messageConverter", xmc);
   }
 
@@ -181,7 +198,7 @@ public class BootstrapDataRepoTest
    * Test method for {@link org.powertac.common.repo.BootstrapDataRepo#readBootRecord(java.net.URL)}.
    */
   @Test
-  public void testReadBootRecord ()
+  public void testReadBootRecordURL ()
   {
     try {
       String cwd = System.getProperty("user.dir");
@@ -192,6 +209,19 @@ public class BootstrapDataRepoTest
     catch (MalformedURLException e) {
       fail(e.toString());
     }
+    List<Object> items;
+    Competition bc = uut.getBootstrapCompetition();
+    assertNotNull("found bootstrap competition", bc);
+    items = uut.getData(CustomerInfo.class);
+    assertEquals("11 customers", 11, items.size());
+    assertEquals("24 weather reports", 336,
+                 uut.getData(WeatherReport.class).size());
+  }
+
+  @Test
+  public void testReadBootRecordFile ()
+  {
+    uut.readBootRecord("src/test/resources/boot.xml");
     List<Object> items;
     Competition bc = uut.getBootstrapCompetition();
     assertNotNull("found bootstrap competition", bc);

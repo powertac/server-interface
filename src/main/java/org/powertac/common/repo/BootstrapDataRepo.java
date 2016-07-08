@@ -17,6 +17,7 @@ package org.powertac.common.repo;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,9 +134,22 @@ public class BootstrapDataRepo implements DomainRepo
   {
     data.clear();
     classMap.clear();
-  }  
+  }
 
-  void readBootRecord (URL bootUrl)
+  // Read from file
+  public void readBootRecord (String filename)
+  {
+    try {
+      readBootRecord(new URL("file:" + filename));
+    }
+    catch (MalformedURLException e) {
+      log.error("bad URL {}{}", "file:", filename);
+      e.printStackTrace();
+    }
+  }
+
+  // Read from URL
+  public void readBootRecord (URL bootUrl)
   {
     Document document = getDocument(bootUrl);
     XPathFactory factory = XPathFactory.newInstance();
