@@ -1,4 +1,5 @@
-server-interface
-================
+# Discontinued
 
-Power TAC server interface definitions. This is the glue that holds together the otherwise independent modules of the Power TAC simulation server.
+This repository is no longer maintained separately, but now a part of
+[powertac-server](https://github.com/powertac/powertac-server/).
+
